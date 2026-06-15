@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
+  --primary: #2563eb;
+  --secondary: #14b8a6;
+  --accent: #f59e0b;
+
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #020617;
+  --foreground: #f8fafc;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer utilities {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 md:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white rounded-2xl px-5 py-3 font-medium transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-teal-500 hover:bg-teal-600 text-white rounded-2xl px-5 py-3 font-medium transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .card-dark {
+    @apply bg-slate-900 border-slate-800 rounded-2xl shadow-sm border;
+  }
+
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  .animate-fade {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .animate-soft {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .glass {
+    @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-md;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-slate-200 dark:bg-slate-800 rounded-lg;
+  }
 }
