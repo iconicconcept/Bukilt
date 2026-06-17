@@ -21,7 +21,7 @@ export default function VendorOnboardingForm() {
 
       toast.success("Vendor profile created");
 
-      router.push("/vendor/dashboard");
+      router.push("/dashboard/vendor");
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");
     } finally {

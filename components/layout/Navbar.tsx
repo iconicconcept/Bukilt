@@ -43,7 +43,7 @@ export default function Navbar() {
           <Link className="btn-primary hover-lift" href="/signup">
             Get Started
           </Link>
-          <Link href="/vendor/onboarding" className="hover:text-primary">
+          <Link href="/dashboard/vendor/onboarding" className="hover:text-primary">
             Become Vendor
           </Link>
         </div>

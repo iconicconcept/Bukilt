@@ -35,3 +35,21 @@ export async function getVendorBookings(vendorId: string) {
 
   return data ?? [];
 }
+
+export async function updateBookingStatus(
+  bookingId: string,
+  status: string,
+) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("bookings")
+    .update({
+      status,
+    })
+    .eq("id", bookingId);
+
+  if (error) {
+    throw error;
+  }
+}

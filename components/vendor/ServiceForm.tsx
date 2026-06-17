@@ -4,8 +4,19 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createServiceAction } from "@/app/dashboard/vendor/services/new/actions";
+import { updateServiceAction } from "@/app/dashboard/vendor/services/[serviceId]/edit/actions";
 
-export default function ServiceForm() {
+type ServiceFormProps = {
+  service?: {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    duration: number;
+  };
+};
+
+export default function ServiceForm({ service }: ServiceFormProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -17,11 +28,16 @@ export default function ServiceForm() {
     try {
       setLoading(true);
 
-      await createServiceAction(form);
+      if (service) {
+        await updateServiceAction(form);
 
-      toast.success("Service created");
+        toast.success("Service updated");
+      } else {
+        await createServiceAction(form);
 
-      router.push("/vendor/services");
+        toast.success("Service created");
+      }
+      router.push("/dashboard/vendor/services");
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -33,6 +49,7 @@ export default function ServiceForm() {
     <form onSubmit={handleSubmit} className="card p-6 space-y-5">
       <input
         name="title"
+        defaultValue={service?.title}
         placeholder="Service Title"
         required
         className="w-full border rounded-xl p-3"
@@ -40,6 +57,7 @@ export default function ServiceForm() {
 
       <textarea
         name="description"
+        defaultValue={service?.description}
         placeholder="Description"
         rows={5}
         required
@@ -48,6 +66,7 @@ export default function ServiceForm() {
 
       <input
         name="price"
+        defaultValue={service?.price}
         type="number"
         placeholder="Price"
         required
@@ -56,14 +75,22 @@ export default function ServiceForm() {
 
       <input
         name="duration"
-        type="number"
+        defaultValue={service?.duration}
         placeholder="Duration (minutes)"
         required
         className="w-full border rounded-xl p-3"
       />
 
+      {service && <input type="hidden" name="id" value={service.id} />}
+
       <button disabled={loading} className="btn-primary w-full">
-        {loading ? "Creating..." : "Create Service"}
+        {loading
+          ? service
+            ? "Updating..."
+            : "Creating..."
+          : service
+            ? "Update Service"
+            : "Create Service"}
       </button>
     </form>
   );

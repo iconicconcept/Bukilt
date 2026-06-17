@@ -28,9 +28,7 @@ export async function createVendor({
   return data;
 }
 
-export async function getVendorByOwnerId(
-  ownerId: string,
-) {
+export async function getVendorByOwnerId(ownerId: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -44,11 +42,40 @@ export async function getVendorByOwnerId(
   return data;
 }
 
-export async function isVendor(
-  ownerId: string,
-) {
-  const vendor =
-    await getVendorByOwnerId(ownerId);
+export async function isVendor(ownerId: string) {
+  const vendor = await getVendorByOwnerId(ownerId);
 
   return !!vendor;
+}
+
+export async function updateVendor(
+  vendorId: string,
+  data: {
+    businessName: string;
+    description: string;
+    category: string;
+    phone: string;
+    location: string;
+    logo?: string;
+  },
+) {
+  const supabase = await createClient();
+
+  const { data: vendor, error } = await supabase
+    .from("vendors")
+    .update({
+      business_name: data.businessName,
+      description: data.description,
+      category: data.category,
+      phone: data.phone,
+      location: data.location,
+      logo: data.logo,
+    })
+    .eq("id", vendorId)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return vendor;
 }

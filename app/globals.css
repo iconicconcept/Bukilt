@@ -49,7 +49,7 @@ body {
   }
 
   .card {
-    @apply bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+    @apply bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 dark:text-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
   }
 
   .card-dark {
