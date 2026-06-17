@@ -23,3 +23,21 @@ export async function createNotification(data: {
 
   if (error) throw error;
 }
+
+export async function getVendorNotifications(vendorId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("*")
+    .eq("vendor_id", vendorId)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
