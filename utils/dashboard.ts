@@ -11,3 +11,12 @@ export function getDashboardStats(bookings: any[]) {
     cancelled: bookings.filter((b) => b.status === "cancelled").length,
   };
 }
+
+export function getUpcomingBookings(bookings: any[]) {
+  return bookings
+    .filter(
+      (booking) =>
+        booking.status === "pending" || booking.status === "confirmed",
+    )
+    .slice(0, 3);
+}

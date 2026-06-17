@@ -1,13 +1,12 @@
-import { useAuthStore } from "@/store/auth.store";
+// import { useAuthStore } from "@/store/auth.store";
 import Link from "next/link";
 
-
 export default function Navbar() {
-//     const isAuthenticated =
-//   useAuthStore(
-//     (state) => state.isAuthenticated
-//   );
-  
+  //     const isAuthenticated =
+  //   useAuthStore(
+  //     (state) => state.isAuthenticated
+  //   );
+
   return (
     <header className="sticky top-0 z-50 glass border-b border-slate-200 dark:border-slate-800">
       <div className="container-custom flex items-center justify-between h-16">
@@ -27,6 +26,9 @@ export default function Navbar() {
           <Link className="hover:text-primary animate-soft" href="/dashboard">
             Dashboard
           </Link>
+          <Link href="/dashboard/bookings" className="hover:text-primary">
+            Bookings
+          </Link>
         </nav>
 
         {/* CTA */}
@@ -40,6 +42,9 @@ export default function Navbar() {
 
           <Link className="btn-primary hover-lift" href="/signup">
             Get Started
+          </Link>
+          <Link href="/vendor/onboarding" className="hover:text-primary">
+            Become Vendor
           </Link>
         </div>
       </div>

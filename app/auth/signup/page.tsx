@@ -5,8 +5,10 @@ import { toast } from "sonner";
 import { signUp } from "@/services/auth.service";
 import AuthCard from "@/components/auth/AuthCard";
 import AuthRedirect from "@/components/auth/AuthRedirect";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(
@@ -32,6 +34,8 @@ export default function SignupPage() {
       toast.success(
         "Account created successfully"
       );
+
+      router.push("/dashboard");
     } catch (error) {
       console.error(error);
 

@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { createClient } from "@/lib/supabaseServer";
+import { checkBookingExists } from "../client/availability.service";
 
 type CreateBookingInput = {
   serviceId: string;
@@ -16,6 +16,15 @@ export async function createBooking({
   time,
   userId,
 }: CreateBookingInput) {
+  const exists = await checkBookingExists({
+    serviceId,
+    date,
+    time,
+  });
+
+  if (exists) {
+    throw new Error("Booking already exists");
+  }
   const { data, error } = await supabase
     .from("bookings")
     .insert({
@@ -32,29 +41,4 @@ export async function createBooking({
   if (error) throw error;
 
   return data;
-}
-
-export async function getUserBookings(userId: string) {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("bookings")
-    .select(
-      `
-      *,
-      services (
-        title,
-        price
-      ),
-      vendors (
-        business_name
-      )
-    `,
-    )
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-
-  return data ?? [];
 }

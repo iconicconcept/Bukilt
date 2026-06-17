@@ -1,23 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { createBooking } from "@/services/booking.service";
-import { getUser } from "@/lib/getUser";
+import { createBooking } from "@/services/client/booking.service";
+import { useAuthStore } from "@/store/auth.store";
 import { useBookingStore } from "@/store/booking.store";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function BookingModal() {
   const { isOpen, closeModal, date, setDate, time, setTime } =
     useBookingStore();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
 
   if (!isOpen) return null;
 
   const handleConfirm = async () => {
     try {
       setLoading(true);
-
-      const user = await getUser();
 
       if (!user) {
         toast.error("Please login first");
@@ -32,6 +33,16 @@ export default function BookingModal() {
         return;
       }
 
+      if (!date) {
+        toast.error("Select a date");
+        return;
+      }
+
+      if (!time) {
+        toast.error("Select a time");
+        return;
+      }
+
       await createBooking({
         serviceId,
         vendorId,
@@ -42,10 +53,15 @@ export default function BookingModal() {
 
       toast.success("Booking confirmed successfully!");
 
+      setDate("");
+      setTime("");
+
       closeModal();
-    } catch (err) {
-      console.error(err);
-      toast.error("Booking failed. Try again.");
+
+      router.push("/dashboard/bookings");
+    } catch (err: any) {
+      console.error("Booking error:", err);
+      toast.error(err.message || "Booking failed");
     } finally {
       setLoading(false);
     }
@@ -79,6 +95,7 @@ export default function BookingModal() {
 
           <input
             type="date"
+            min={new Date().toISOString().split("T")[0]}
             className="w-full border rounded-xl p-2"
             value={date || ""}
             onChange={(e) => setDate(e.target.value)}
@@ -101,7 +118,12 @@ export default function BookingModal() {
         <button
           onClick={handleConfirm}
           disabled={loading}
-          className="btn-primary w-full mt-6"
+          className="
+            btn-primary
+            w-full
+            mt-6
+            disabled:opacity-50
+          "
         >
           {loading ? "Processing..." : "Confirm Booking"}
         </button>

@@ -16,12 +16,12 @@ export async function getService(id: string) {
     .select(
       `
       *,
-      vendors (
+      vendors!services_vendor_id_fkey (
         id,
         business_name,
         description
       )
-    `,
+      `,
     )
     .eq("id", id)
     .single();

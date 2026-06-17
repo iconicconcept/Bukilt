@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/auth.store";
 import { useDashboardStore } from "@/store/dashboard.store";
-import { getUserBookings } from "@/services/booking.service";
+import { getUserBookings } from "@/services/server/booking.service";
 
 export function useDashboard() {
   const user = useAuthStore(

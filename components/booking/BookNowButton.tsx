@@ -20,7 +20,7 @@ export default function BookNowButton({
   };
 
   return (
-    <button onClick={handleClick} className="btn-primary w-full mt-5">
+    <button onClick={handleClick} className="btn-primary w-full mt-4">
       Book Now
     </button>
   );
