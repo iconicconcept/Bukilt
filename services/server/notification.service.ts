@@ -41,3 +41,21 @@ export async function getVendorNotifications(vendorId: string) {
 
   return data ?? [];
 }
+
+export async function getUserNotifications(userId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}

@@ -1,15 +1,22 @@
 "use client";
 
-import { signOut } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/auth/logout", {
+      method: "GET",
+    });
+
+    router.refresh();
+
+    router.push("/");
+  }
+
   return (
-    <button
-      onClick={async () => {
-        await signOut();
-      }}
-      className="btn-secondary mt-4 bg-red-200"
-    >
+    <button onClick={handleLogout} className="hover:text-primary">
       Logout
     </button>
   );

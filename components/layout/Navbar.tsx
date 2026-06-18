@@ -1,52 +1,108 @@
-// import { useAuthStore } from "@/store/auth.store";
 import Link from "next/link";
 
-export default function Navbar() {
-  //     const isAuthenticated =
-  //   useAuthStore(
-  //     (state) => state.isAuthenticated
-  //   );
+import { createClient } from "@/lib/supabaseServer";
+
+import { isVendor } from "@/services/server/vendor.service";
+
+import { getUserNotifications } from "@/services/server/notification.service";
+
+import NotificationBell from "@/components/common/NotificationBell";
+
+import MobileNav from "./MobileNav";
+import LogoutButton from "../auth/LogOutButton";
+
+export default async function Navbar() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let vendor = false;
+
+  let notifications: any[] = [];
+
+  if (user) {
+    vendor = await isVendor(user.id);
+
+    notifications = await getUserNotifications(user.id);
+  }
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-slate-200 dark:border-slate-800">
-      <div className="container-custom flex items-center justify-between h-16">
+    <header
+      className="
+      sticky
+      top-0
+      z-50
+      bg-white
+      border-b
+    "
+    >
+      <div
+        className="
+        container-custom
+        h-16
+        flex
+        items-center
+        justify-between
+      "
+      >
         {/* Logo */}
         <Link
           href="/"
-          className="font-bold text-xl tracking-tight hover:opacity-80 animate-soft"
+          className="
+          font-bold
+          text-xl
+        "
         >
           Bukil
         </Link>
 
-        {/* Nav */}
-        <nav className="hidden md:flex gap-6 text-sm text-slate-600 dark:text-slate-300">
-          <Link className="hover:text-primary animate-soft" href="/services">
-            Services
-          </Link>
-          <Link className="hover:text-primary animate-soft" href="/dashboard">
-            Dashboard
-          </Link>
-          <Link href="/dashboard/bookings" className="hover:text-primary">
-            Bookings
-          </Link>
+        {/* Desktop */}
+        <nav
+          className="
+          hidden
+          md:flex
+          items-center
+          gap-6
+        "
+        >
+          <Link href="/services">Services</Link>
+
+          {user && (
+            <>
+              <Link href="/dashboard/bookings">My Bookings</Link>
+
+              <NotificationBell notifications={notifications} />
+
+              {vendor ? (
+                <Link href="/dashboard/vendor">Vendor Dashboard</Link>
+              ) : (
+                <Link href="/dashboard/vendor/onboarding">Become Vendor</Link>
+              )}
+
+              <LogoutButton />
+            </>
+          )}
+
+          {!user && (
+            <>
+              <Link href="/auth/login">Login</Link>
+
+              <Link
+                href="/auth/signup"
+                className="
+                btn-primary
+              "
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </nav>
 
-        {/* CTA */}
-        <div className="flex gap-3 items-center">
-          <Link
-            className="text-sm hover:text-primary animate-soft"
-            href="/auth/login"
-          >
-            Login
-          </Link>
-
-          <Link className="btn-primary hover-lift" href="/signup">
-            Get Started
-          </Link>
-          <Link href="/dashboard/vendor/onboarding" className="hover:text-primary">
-            Become Vendor
-          </Link>
-        </div>
+        {/* Mobile */}
+        <MobileNav user={!!user} vendor={vendor} />
       </div>
     </header>
   );

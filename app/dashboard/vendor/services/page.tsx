@@ -44,6 +44,17 @@ export default async function VendorServicesPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {services.map((service: any) => (
               <div key={service.id} className="card p-6">
+                {service.image ? (
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-48 object-cover rounded-xl mb-4"
+                  />
+                ) : (
+                  <div className="w-full h-48 rounded-xl bg-slate-100 flex items-center justify-center mb-4 text-slate-400">
+                    No image
+                  </div>
+                )}
                 <h3 className="font-semibold">{service.title}</h3>
 
                 <p className="text-slate-500 mt-2">{service.description}</p>

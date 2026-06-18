@@ -1,11 +1,7 @@
 import { ReactNode } from "react";
-
-import NotificationBell from "@/components/vendor/NotificationBell";
-
+import NotificationBell from "@/components/common/NotificationBell";
 import { createClient } from "@/lib/supabaseServer";
-
 import { getVendorByOwnerId } from "@/services/server/vendor.service";
-
 import { getVendorNotifications } from "@/services/server/notification.service";
 
 export default async function DashboardLayout({
@@ -45,6 +41,10 @@ export default async function DashboardLayout({
 
           <a href="/dashboard/vendor/bookings" className="block">
             Bookings
+          </a>
+
+          <a href="/dashboard/vendor/reviews" className="block">
+            Reviews
           </a>
 
           <a href="/dashboard/vendor/profile" className="block">

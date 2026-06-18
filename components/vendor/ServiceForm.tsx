@@ -28,6 +28,29 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     try {
       setLoading(true);
 
+      const imageFile = form.get("image") as File;
+
+      if (imageFile && imageFile.size > 0) {
+        const uploadForm = new FormData();
+
+        uploadForm.append("file", imageFile);
+
+        const response = await fetch("/api/upload/service", {
+          method: "POST",
+          body: uploadForm,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error);
+        }
+
+        form.set("image", result.url);
+      } else {
+        form.delete("image");
+      }
+
       if (service) {
         await updateServiceAction(form);
 
@@ -37,6 +60,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
         toast.success("Service created");
       }
+
       router.push("/dashboard/vendor/services");
     } catch (error: any) {
       toast.error(error.message);
@@ -47,6 +71,13 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="card p-6 space-y-5">
+      <input
+        name="image"
+        type="file"
+        accept="image/*"
+        className="w-full border rounded-xl p-3"
+      />
+
       <input
         name="title"
         defaultValue={service?.title}

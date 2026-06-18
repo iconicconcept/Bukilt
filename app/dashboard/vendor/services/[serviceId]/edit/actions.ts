@@ -24,10 +24,13 @@ export async function updateServiceAction(formData: FormData) {
 
   const duration = Number(formData.get("duration"));
 
+  const image = formData.get("image") as string;
+
   return updateService(id, {
     title,
     description,
     price,
     duration,
+    image,
   });
 }

@@ -4,11 +4,8 @@ import { createClient } from "@/lib/supabaseServer";
 import { getVendorByOwnerId } from "@/services/server/vendor.service";
 import { createService } from "@/services/server/service-management.service";
 
-export async function createServiceAction(
-  formData: FormData,
-) {
-  const supabase =
-    await createClient();
+export async function createServiceAction(formData: FormData) {
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -18,32 +15,21 @@ export async function createServiceAction(
     throw new Error("Unauthorized");
   }
 
-  const vendor =
-    await getVendorByOwnerId(
-      user.id,
-    );
+  const vendor = await getVendorByOwnerId(user.id);
 
   if (!vendor) {
-    throw new Error(
-      "Vendor profile not found",
-    );
+    throw new Error("Vendor profile not found");
   }
 
-  const title =
-    formData.get("title") as string;
+  const title = formData.get("title") as string;
 
-  const description =
-    formData.get(
-      "description",
-    ) as string;
+  const description = formData.get("description") as string;
 
-  const price = Number(
-    formData.get("price"),
-  );
+  const price = Number(formData.get("price"));
 
-  const duration = Number(
-    formData.get("duration"),
-  );
+  const duration = Number(formData.get("duration"));
+
+  const image = formData.get("image") as string;
 
   return createService({
     vendorId: vendor.id,
@@ -51,5 +37,6 @@ export async function createServiceAction(
     description,
     price,
     duration,
+    image,
   });
 }

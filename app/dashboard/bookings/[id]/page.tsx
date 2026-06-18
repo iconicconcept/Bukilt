@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabaseServer";
 import { getBookingById } from "@/services/server/bookingDetails.service";
 import CancelBookingButton from "@/components/dashboard/CancelBookingButton";
+import ReviewForm from "@/components/reviews/ReviewForm";
+import { getBookingReview } from "@/services/server/review.service";
 
 // type BookingDetails = {
 //   id: string;
@@ -29,7 +31,6 @@ export default async function BookingDetailsPage({
     id: string;
   }>;
 }) {
-
   const { id } = await params;
   const supabase = await createClient();
 
@@ -42,6 +43,7 @@ export default async function BookingDetailsPage({
   }
 
   const booking = await getBookingById(id, user.id);
+  const review = await getBookingReview(id);
 
   return (
     <div className="section">
@@ -79,10 +81,37 @@ export default async function BookingDetailsPage({
             <span className="badge">{booking.status}</span>
           </div>
 
-          <CancelBookingButton
-            bookingId={booking.id}
-            status={booking.status}
-          />
+          {booking.status !== "completed" && booking.status !== "cancelled" && (
+            <CancelBookingButton
+              bookingId={booking.id}
+              status={booking.status}
+            />
+          )}
+
+          {booking.status === "completed" && !review && (
+            <div className="mt-8 border-t pt-6">
+              <h3 className="text-xl font-bold mb-4">Rate this service</h3>
+
+              <ReviewForm bookingId={booking.id} vendorId={booking.vendor_id} />
+            </div>
+          )}
+
+          {review && (
+            <div className="mt-8 border-t pt-6">
+              <h3 className="font-bold">Your Review</h3>
+
+              <div className="mt-3">
+                <div className="text-yellow-500">
+                  {"★".repeat(review.rating)}
+                  <span className="text-slate-300">
+                    {"★".repeat(5 - review.rating)}
+                  </span>
+                </div>
+
+                <p className="text-slate-500 mt-2">{review.comment}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

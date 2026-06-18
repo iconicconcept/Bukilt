@@ -35,6 +35,7 @@ export default function SignupPage() {
         "Account created successfully"
       );
 
+      router.refresh();
       router.push("/dashboard");
     } catch (error) {
       console.error(error);

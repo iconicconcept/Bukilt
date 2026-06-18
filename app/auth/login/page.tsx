@@ -6,7 +6,7 @@ import { signIn } from "@/services/auth.service";
 import AuthCard from "@/components/auth/AuthCard";
 import { useRouter } from "next/navigation";
 
-export default function SignupPage() {
+export default function LogInPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +17,6 @@ export default function SignupPage() {
 
     const email = form.get("email") as string;
     const password = form.get("password") as string;
-    const data = await signIn(email, password);
 
     try {
       setLoading(true);
@@ -25,7 +24,7 @@ export default function SignupPage() {
       await signIn(email, password);
 
       toast.success("Signed in successfully");
-      console.log("LOGIN DATA:", data);
+      router.refresh();
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
@@ -37,7 +36,7 @@ export default function SignupPage() {
   }
 
   return (
-    <AuthCard title="Create Account" subtitle="Join Bukil today">
+    <AuthCard title="Welcome Back" subtitle="Login to your Bukil account">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* <input
           name="fullName"

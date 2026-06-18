@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabaseServer";
-import { getUserBookings } from "@/services/server/booking.service";
-
-import BookingHistoryTable from "@/components/dashboard/BookingHistoryTable";
+import BookingTabs from "@/components/dashboard/BookingTabs";
 
 export default async function BookingsPage() {
   const supabase = await createClient();
@@ -15,18 +13,41 @@ export default async function BookingsPage() {
     redirect("/auth/login");
   }
 
-  const bookings = await getUserBookings(user.id);
+  const { data: bookings, error } = await supabase
+    .from("bookings")
+    .select(
+      `
+        id,
+        booking_date,
+        booking_time,
+        status,
+
+        services(
+          title,
+          price
+        ),
+
+        vendors(
+          business_name,
+          logo
+        )
+        `,
+    )
+    .eq("user_id", user.id)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  if (error) {
+    throw error;
+  }
 
   return (
     <div className="section">
       <div className="container-custom">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">My Bookings</h1>
+        <h1 className="text-3xl font-bold mb-8">My Bookings</h1>
 
-          <p className="text-slate-500">Manage all your bookings.</p>
-        </div>
-
-        <BookingHistoryTable bookings={bookings} />
+        <BookingTabs bookings={bookings ?? []} />
       </div>
     </div>
   );

@@ -6,11 +6,23 @@ type Service = {
   description: string;
   price: number;
   duration: number;
+  image: string;
 };
 
 export default function ServiceCard({ service }: { service: Service }) {
   return (
     <div className="card p-5 flex flex-col gap-3 hover-lift animate-soft">
+      {service.image ? (
+        <img
+          src={service.image}
+          className="w-full h-48 object-cover rounded-xl"
+        />
+      ) : (
+        <div className="w-full h-48 bg-slate-100 rounded-xl flex items-center justify-center">
+          No Image
+        </div>
+      )}
+
       {/* Title */}
       <h2 className="text-lg font-semibold">{service.title}</h2>
 

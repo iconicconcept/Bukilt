@@ -6,6 +6,7 @@ type CreateServiceInput = {
   description: string;
   price: number;
   duration: number;
+  image?: string;
 };
 
 export async function createService({
@@ -14,6 +15,7 @@ export async function createService({
   description,
   price,
   duration,
+  image,
 }: CreateServiceInput) {
   const supabase = await createClient();
 
@@ -25,6 +27,7 @@ export async function createService({
       description,
       price,
       duration,
+      image,
     })
     .select()
     .single();
@@ -71,6 +74,7 @@ export async function updateService(
     description: string;
     price: number;
     duration: number;
+    image: string;
   },
 ) {
   const supabase = await createClient();
@@ -82,6 +86,7 @@ export async function updateService(
       description: data.description,
       price: data.price,
       duration: data.duration,
+      image: data.image
     })
     .eq("id", serviceId)
     .select()

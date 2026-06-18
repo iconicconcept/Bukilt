@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabaseServer";
 import { getVendorByOwnerId } from "@/services/server/vendor.service";
 import { getVendorServices } from "@/services/server/service-management.service";
 import { getVendorBookings } from "@/services/server/vendorBooking.service";
+import VendorReviews from "@/components/vendor/VendorReviews";
+import { getVendorReviewSummary } from "@/services/server/review.service";
 
 export default async function VendorDashboardPage() {
   const supabase = await createClient();
@@ -23,6 +25,7 @@ export default async function VendorDashboardPage() {
 
   const services = await getVendorServices(vendor.id);
   const bookings = await getVendorBookings(vendor.id);
+  const reviewSummary = await getVendorReviewSummary(vendor.id);
 
   const totalServices = services.length;
 
@@ -38,6 +41,12 @@ export default async function VendorDashboardPage() {
 
   return (
     <div>
+      {vendor.logo && (
+        <img
+          src={vendor.logo}
+          className="w-20 h-20 rounded-full object-cover mb-4"
+        />
+      )}
       <h1 className="text-3xl font-bold">Dashboard</h1>
 
       <p className="text-slate-500 mt-2">
@@ -51,6 +60,12 @@ export default async function VendorDashboardPage() {
 
         <DashboardCard title="Revenue" value={`₦${revenue}`} />
       </div>
+
+      <VendorReviews
+        average={reviewSummary.average}
+        count={reviewSummary.count}
+        reviews={reviewSummary.reviews}
+      />
     </div>
   );
 }
