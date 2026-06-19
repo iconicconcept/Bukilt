@@ -1,9 +1,14 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabaseServer";
-import { getVendorByOwnerId } from "@/services/server/vendor.service";
-import VendorProfileForm from "@/components/vendor/VendorProfileForm";
 
-export default async function ProfilePage() {
+import { createClient } from "@/lib/supabaseServer";
+
+import { getVendorByOwnerId } from "@/services/server/vendor.service";
+
+import AvailabilityForm from "@/components/vendor/AvailabilityForm";
+
+import { getVendorAvailability } from "@/services/server/vendorAvailability.service";
+
+export default async function AvailabilityPage() {
   const supabase = await createClient();
 
   const {
@@ -20,13 +25,13 @@ export default async function ProfilePage() {
     redirect("/dashboard/vendor/onboarding");
   }
 
-  return (
-    <div className="section">
-      <div className="container-custom max-w-3xl">
-        <h1 className="text-3xl font-bold mb-6">Vendor Profile</h1>
+  const availability = await getVendorAvailability(vendor.id);
 
-        <VendorProfileForm vendor={vendor} />
-      </div>
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-6">Availability</h1>
+
+      <AvailabilityForm vendorId={vendor.id} availability={availability} />
     </div>
   );
 }

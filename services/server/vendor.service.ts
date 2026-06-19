@@ -57,6 +57,10 @@ export async function updateVendor(
     phone: string;
     location: string;
     logo?: string;
+
+    availableDays: string[];
+    startTime: string;
+    endTime: string;
   },
 ) {
   const supabase = await createClient();
@@ -70,6 +74,10 @@ export async function updateVendor(
       phone: data.phone,
       location: data.location,
       logo: data.logo,
+
+      available_days: data.availableDays,
+      start_time: data.startTime,
+      end_time: data.endTime,
     })
     .eq("id", vendorId)
     .select()

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getService, getServiceReviews } from "@/services/service.service";
 import ServiceReviews from "@/components/reviews/ServiceReviews";
 import BookNowButton from "@/components/booking/BookNowButton";
+import Link from "next/link";
 
 export default async function ServiceDetailPage({
   params,
@@ -64,6 +65,13 @@ export default async function ServiceDetailPage({
                 <p className="text-sm text-slate-500">
                   {service.vendors?.location}
                 </p>
+
+                <Link
+                  href={`/vendors/${service.vendor_id}`}
+                  className="text-primary text-sm"
+                >
+                  View Vendor Profile
+                </Link>
 
                 <p className="text-sm mt-2">{service.vendors?.description}</p>
               </div>

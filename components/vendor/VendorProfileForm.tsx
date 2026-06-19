@@ -10,7 +10,20 @@ type Props = {
 
 export default function VendorProfileForm({ vendor }: Props) {
   const [loading, setLoading] = useState(false);
-//   const [uploading, setUploading] = useState(false);
+  //   const [uploading, setUploading] = useState(false);
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const [selectedDays, setSelectedDays] = useState<string[]>(
+    vendor.available_days ?? [],
+  );
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -75,6 +88,69 @@ export default function VendorProfileForm({ vendor }: Props) {
         placeholder="Business Description"
         className="w-full border rounded-xl p-3"
       />
+
+      <div className="space-y-4">
+        <label className="font-medium">Available Days</label>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {days.map((day) => {
+            const active = selectedDays.includes(day);
+
+            return (
+              <label
+                key={day}
+                className={`
+          cursor-pointer
+          rounded-xl
+          border
+          p-3
+          text-center
+          ${active ? "bg-primary text-white" : "bg-white"}
+          `}
+              >
+                <input
+                  type="checkbox"
+                  name="availableDays"
+                  value={day}
+                  checked={active}
+                  onChange={() => {
+                    setSelectedDays((prev) =>
+                      prev.includes(day)
+                        ? prev.filter((d) => d !== day)
+                        : [...prev, day],
+                    );
+                  }}
+                  className="hidden"
+                />
+
+                {day}
+              </label>
+            );
+          })}
+        </div>
+
+        <div>
+          <label>Start Time</label>
+
+          <input
+            type="time"
+            name="startTime"
+            defaultValue={vendor.start_time ?? ""}
+            className="w-full border rounded-xl p-3"
+          />
+        </div>
+
+        <div>
+          <label>End Time</label>
+
+          <input
+            type="time"
+            name="endTime"
+            defaultValue={vendor.end_time ?? ""}
+            className="w-full border rounded-xl p-3"
+          />
+        </div>
+      </div>
 
       <input type="file" name="logo" accept="image/*" className="w-full" />
 

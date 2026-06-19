@@ -1,18 +1,32 @@
 import { supabase } from "@/lib/supabase";
 
 // GET ALL SERVICES
-export async function getServices() {
-  const { data, error } = await supabase.from("services").select(`
-*,
-vendors(
- category,
- business_name
-)
-`);
+export async function getServices(filters?: {
+  search?: string;
+  category?: string;
+}) {
+  let query = supabase.from("services").select(`
+      *,
+      vendors(
+        category,
+        business_name,
+        location
+      )
+    `);
+
+  if (filters?.search) {
+    query = query.ilike("title", `%${filters.search}%`);
+  }
+
+  if (filters?.category) {
+    query = query.eq("vendors.category", filters.category);
+  }
+
+  const { data, error } = await query;
 
   if (error) throw error;
 
-  return data;
+  return data ?? [];
 }
 
 // GET SINGLE SERVICE

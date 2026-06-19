@@ -1,8 +1,19 @@
 import { getServices } from "@/services/service.service";
 import ServiceFilters from "@/components/services/ServiceFilters";
 
-export default async function ServicesPage() {
-  const services = await getServices();
+export default async function ServicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    search?: string;
+    category?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const services = await getServices({
+    search: params.search,
+    category: params.category,
+  });
 
   return (
     <div className="section">

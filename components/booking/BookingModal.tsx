@@ -11,10 +11,21 @@ export default function BookingModal() {
   const { isOpen, closeModal, date, setDate, time, setTime } =
     useBookingStore();
   const [loading, setLoading] = useState(false);
+  const [slots, setSlots] = useState<string[]>([]);
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
 
   if (!isOpen) return null;
+
+  async function loadSlots(vendorId: string, date: string) {
+    const response = await fetch(
+      `/api/availability?vendorId=${vendorId}&date=${date}`,
+    );
+
+    const data = await response.json();
+
+    setSlots(data);
+  }
 
   const handleConfirm = async () => {
     try {
@@ -98,7 +109,17 @@ export default function BookingModal() {
             min={new Date().toISOString().split("T")[0]}
             className="w-full border rounded-xl p-2"
             value={date || ""}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => {
+              const selectedDate = e.target.value;
+
+              setDate(selectedDate);
+
+              const vendorId = useBookingStore.getState().vendorId;
+
+              if (vendorId) {
+                loadSlots(vendorId, selectedDate);
+              }
+            }}
           />
         </div>
 
@@ -106,12 +127,19 @@ export default function BookingModal() {
         <div className="space-y-2 mt-4">
           <label className="text-sm text-slate-500">Select Time</label>
 
-          <input
-            type="time"
-            className="w-full border rounded-xl p-2"
+          <select
             value={time || ""}
             onChange={(e) => setTime(e.target.value)}
-          />
+            className="w-full border rounded-xl p-3"
+          >
+            <option value="">Select Time</option>
+
+            {slots.map((slot) => (
+              <option key={slot} value={slot}>
+                {slot}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* ACTION */}
