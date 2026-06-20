@@ -67,3 +67,39 @@ export default function ServiceCard({ service }: { service: Service }) {
     </div>
   );
 }
+
+
+{/* 
+"use client";
+
+import Link from "next/link";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
+
+interface ServiceCardProps {
+  icon: string;
+  name: string;
+  desc: string;
+  category?: string;
+}
+
+export function ServiceCard({
+  icon,
+  name,
+  desc,
+  category = name,
+}: ServiceCardProps) {
+  return (
+    <ScrollReveal>
+      <Link href={`/services?category=${category}`}>
+        <div className="p-6 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-amber-500/50 hover:shadow-md transition-all cursor-pointer group">
+          <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
+            {icon}
+          </div>
+          <h3 className="font-bold text-lg mb-2">{name}</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400">{desc}</p>
+        </div>
+      </Link>
+    </ScrollReveal>
+  );
+}  
+*/}

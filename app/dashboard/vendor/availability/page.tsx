@@ -1,12 +1,7 @@
 import { redirect } from "next/navigation";
-
 import { createClient } from "@/lib/supabaseServer";
-
 import { getVendorByOwnerId } from "@/services/server/vendor.service";
-
 import AvailabilityForm from "@/components/vendor/AvailabilityForm";
-
-import { getVendorAvailability } from "@/services/server/vendorAvailability.service";
 
 export default async function AvailabilityPage() {
   const supabase = await createClient();
@@ -25,13 +20,18 @@ export default async function AvailabilityPage() {
     redirect("/dashboard/vendor/onboarding");
   }
 
-  const availability = await getVendorAvailability(vendor.id);
-
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Availability</h1>
 
-      <AvailabilityForm vendorId={vendor.id} availability={availability} />
+      <AvailabilityForm
+        vendorId={vendor.id}
+        availability={{
+          available_days: vendor.available_days,
+          start_time: vendor.start_time,
+          end_time: vendor.end_time,
+        }}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 
 import { checkBookingExists } from "../client/availability.service";
+import { getAvailableSlots } from "../server/availability.service";
 
 type CreateBookingInput = {
   serviceId: string;
@@ -22,6 +23,12 @@ export async function createBooking({
     date,
     time,
   });
+
+  const availableSlots = await getAvailableSlots(vendorId, date);
+
+  if (!availableSlots.includes(time)) {
+    throw new Error("This slot is no longer available");
+  }
 
   if (exists) {
     throw new Error("Booking already exists");

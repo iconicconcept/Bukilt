@@ -8,6 +8,25 @@ type Props = {
   vendor: any;
 };
 
+function formatTime(time: string) {
+  const [hours, minutes] =
+    time.split(":");
+
+  const date = new Date();
+
+  date.setHours(Number(hours));
+  date.setMinutes(Number(minutes));
+
+  return date.toLocaleTimeString(
+    "en-US",
+    {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }
+  );
+}
+
 export default function VendorProfileForm({ vendor }: Props) {
   const [loading, setLoading] = useState(false);
   //   const [uploading, setUploading] = useState(false);
@@ -151,6 +170,20 @@ export default function VendorProfileForm({ vendor }: Props) {
           />
         </div>
       </div>
+
+      {vendor.available_days?.length > 0 && (
+        <div className="mt-4">
+          <p className="font-semibold">Availability</p>
+
+          <p className="text-slate-500">{vendor.available_days.join(", ")}</p>
+
+          <p className="text-slate-500">
+            {formatTime(vendor.start_time)}
+            {" - "}
+            {formatTime(vendor.end_time)}
+          </p>
+        </div>
+      )}
 
       <input type="file" name="logo" accept="image/*" className="w-full" />
 

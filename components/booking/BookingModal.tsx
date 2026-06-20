@@ -109,16 +109,22 @@ export default function BookingModal() {
             min={new Date().toISOString().split("T")[0]}
             className="w-full border rounded-xl p-2"
             value={date || ""}
-            onChange={(e) => {
+            onChange={async (e) => {
               const selectedDate = e.target.value;
 
               setDate(selectedDate);
 
-              const vendorId = useBookingStore.getState().vendorId;
+              const { vendorId } = useBookingStore.getState();
 
-              if (vendorId) {
-                loadSlots(vendorId, selectedDate);
-              }
+              if (!vendorId) return;
+
+              const response = await fetch(
+                `/api/availability?vendorId=${vendorId}&date=${selectedDate}`,
+              );
+
+              const data = await response.json();
+
+              setSlots(data);
             }}
           />
         </div>
@@ -141,6 +147,12 @@ export default function BookingModal() {
             ))}
           </select>
         </div>
+
+        {date && slots.length === 0 && (
+          <p className="text-red-500 text-sm">
+            No available slots for this day.
+          </p>
+        )}
 
         {/* ACTION */}
         <button
